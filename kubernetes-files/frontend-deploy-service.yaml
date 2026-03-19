@@ -19,22 +19,21 @@ spec:
         image: 811572529216.dkr.ecr.ap-south-1.amazonaws.com/frontend:2
         ports:
         - containerPort: 80
-      #  env:   # <-- Fixed indentation
-       # - name: REACT_APP_API_BASE_URL
-        #  value: "http://ad2084f73b7e34376bd49ec0ea55a8bb-2099085754.us-east-1.elb.amazonaws.com"
 
 ---
 apiVersion: v1
 kind: Service
 metadata: 
   name: frontend
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:811572529216:certificate/8b2a83f1-34a8-4913-8b7c-ec263d9c1b0f
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
 spec:
   ports:
-  - port: 80
+  - port: 443
     targetPort: 80
     protocol: TCP
-      #    nodePort: 31004  # Optional: Specify a nodePort if you want a fixed port
   selector:
-    app: frontend  # Ensure this matches the labels in the Deployment
+    app: frontend
   type: LoadBalancer
-
